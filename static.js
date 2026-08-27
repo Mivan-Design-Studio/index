@@ -19,16 +19,3 @@ window.addEventListener("pointermove", (event) => {
   hero.style.setProperty("--mx", `${x}px`);
   hero.style.setProperty("--my", `${y}px`);
 }, { passive: true });
-
-const inquiryForm = document.querySelector(".inquiry-form");
-inquiryForm?.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const data = new FormData(inquiryForm);
-  const name = String(data.get("name") || "");
-  const email = String(data.get("email") || "");
-  const category = String(data.get("category") || "");
-  const details = String(data.get("details") || "");
-  const subject = encodeURIComponent(`專案合作詢問｜${category}｜${name}`);
-  const body = encodeURIComponent(`姓名：${name}\nEmail：${email}\n想合作的類型：${category}\n\n需求描述：\n${details}`);
-  window.location.href = `mailto:mivane.design@gmail.com?subject=${subject}&body=${body}`;
-});
