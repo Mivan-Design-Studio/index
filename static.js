@@ -19,3 +19,36 @@ window.addEventListener("pointermove", (event) => {
   hero.style.setProperty("--mx", `${x}px`);
   hero.style.setProperty("--my", `${y}px`);
 }, { passive: true });
+
+const inquiryForm = document.querySelector(".inquiry-form");
+const inquiryButton = inquiryForm?.querySelector('button[type="submit"]');
+const inquiryStatus = inquiryForm?.querySelector(".form-status");
+
+inquiryForm?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  if (!inquiryButton || !inquiryStatus) return;
+
+  inquiryButton.disabled = true;
+  inquiryButton.textContent = "正在送出…";
+  inquiryStatus.textContent = "";
+  inquiryStatus.className = "form-status sending";
+
+  try {
+    const response = await fetch(inquiryForm.action, {
+      method: "POST",
+      body: new FormData(inquiryForm),
+      headers: { Accept: "application/json" },
+    });
+
+    if (!response.ok) throw new Error("Form submission failed");
+    inquiryForm.reset();
+    inquiryStatus.textContent = "已成功送出！謝謝你的來信，我們會盡快回覆。";
+    inquiryStatus.className = "form-status success";
+  } catch {
+    inquiryStatus.textContent = "目前無法送出，請稍後再試，或直接來信 mivane.design@gmail.com。";
+    inquiryStatus.className = "form-status error";
+  } finally {
+    inquiryButton.disabled = false;
+    inquiryButton.innerHTML = "送出合作詢問 <span>↗</span>";
+  }
+});
